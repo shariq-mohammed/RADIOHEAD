@@ -54,16 +54,22 @@ groupSS(
 \item{ind}{indices of MCMC samples to use after burnin and thinning. Defaults to 1 to Nmcmc.}
 }
 \value{
-zeta MCMC samples of \eqn{\zeta} - dimension \eqn{N} samples x \eqn{g} groups
+zeta: MCMC samples of \eqn{\zeta} - dimension \eqn{N} samples x \eqn{g} groups
 
-b MCMC samples of \eqn{\beta} - dimension \eqn{N} samples x \eqn{L} predictors
+b: MCMC samples of \eqn{\beta} - dimension \eqn{N} samples x \eqn{L} predictors
 
-x_cnames column names from the predictor matrix
+x_cnames: column names from the predictor matrix
 }
 \description{
 Gibbs sampling algorithm for the estiamtion of the model with group spike-and-slab prior
 }
 \examples{
-groupSS()
+p = 10
+n = 100
+beta = rep(c(2,0), c(p/2,p/2))
+g_id = rep(c(1,2), c(p/2,p/2))
+X = matrix(rnorm(n*p), nrow = n)
+y = rnorm(n, mean = X\%*\%beta, sd = 0.01)
+groupSS(y, X, g_id, Nmcmc = 50)
 }
 \keyword{groupSS()}

@@ -11,15 +11,17 @@ fdr_var_selection(b, x_cnames, ...)
 
 \item{x_cnames}{names of columns in the predictor matrix}
 
-\item{...}{other arguments to \eqn{pep()}}
+\item{...}{other arguments to \eqn{localFDR()}}
 }
 \value{
-est_coef estimated coefficients after the FDR-based variable selection
+est_coef: estimated coefficients after the FDR-based variable selection
 }
 \description{
 Computes the estimated coefficients of \eqn{\beta} from the radiogenomics model
 }
 \examples{
-fdr_var_selection()
+b = matrix(rnorm(100*5), nrow=100)
+x_cnames = paste0('Col',1:5)
+fdr_var_selection(b,x_cnames)
 }
 \keyword{fdr_var_selection()}
