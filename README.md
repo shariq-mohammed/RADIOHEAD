@@ -7,7 +7,8 @@ Example code to run the RADIOHEAD pipeline. This code only shows an example exec
 
 ```
 # install the package (devtools package needed)
-if(!require(RADIOHEAD)) devtools::install_github('shariq-mohammed/RADIOHEAD')
+if(!require(devtools)) install.packages("devtools")
+devtools::install_github('shariq-mohammed/RADIOHEAD')
 ```
 
 Load the package
