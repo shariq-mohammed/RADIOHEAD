@@ -1,0 +1,54 @@
+setwd('C:/Users/shariqm/Documents/Fall 2018/Density')
+source('../Code/matrixPlot.R')
+tmr_type = 'LGG'
+
+sub.index = list.files(paste('./', tmr_type, sep=''))
+if(tmr_type=='LGG') sub.index = sub.index[-c(7,27,51,65)]
+n = length(sub.index)
+
+expr = read.delim("./Human__TCGA_GBMLGG__UNC__RNAseq__HiSeq_RNA__01_28_2016__BI__Gene__Firehose_RSEM_log2.cct")
+cnames = sapply(2:ncol(expr),
+                function(i) paste(substr(colnames(expr)[i], 1, 4),
+                                  '-',
+                                  substr(colnames(expr)[i], 6, 7),
+                                  '-',
+                                  substr(colnames(expr)[i], 9, 12),
+                                  sep=''))
+rnames = as.character(expr[,1])
+sub.index2 = match(sub.index, cnames)
+expr = as.matrix(expr[,sub.index2+1]) # add 1 because the first column is gene symbols in expr
+rownames(expr) = rnames
+colnames(expr) = sub.index
+
+require(GSEABase)
+require(GSVA)
+require(parallel)
+nCores=6
+collection='lgg'
+gene.set = getGmt(paste(collection, '.v6.2.symbols.gmt', sep=''))
+pathScores = gsva(expr, gene.set, method='gsva',
+                  verbose=TRUE, parallel.sz=nCores)
+syn_trans = list(pos = names(which(pathScores[1,]>=0)),
+                 neg = names(which(pathScores[1,]<0)))
+R.matlab::writeMat('./syn_trans.mat', syn_trans = syn_trans)
+
+dens = R.matlab::readMat(paste('./density',tmr_type,'.mat',sep=''))
+ts.plot(t(dens$den.t1[which(pathScores[1,]>=0),,4]),ylim=c(0,111))
+ts.plot(t(dens$den.t1[which(pathScores[1,]<0),,4]),ylim=c(0,111))
+
+
+data = R.matlab::readMat(paste('cov',tmr_type,'.mat',sep=''))
+mod_type = 't1'
+comp=4
+assign(paste('K',comp,sep=''),
+       data[[paste('K',mod_type,comp,sep='.')]])
+assign(paste('ieden',comp,sep=''),
+       data[[paste('ieden',mod_type,comp,sep='.')]])
+assign(paste('svdecomp',comp,sep=''),
+       svd(eval(parse(text=paste('K',comp,sep='')))))
+
+ts.plot(svdecomp4$u[,1])
+
+pScore4 = ieden4%*%(svdecomp4$u[,1:p4])
+
+plot(pScore4[,1],col=1+as.numeric(pathScores[1,]>=0))
