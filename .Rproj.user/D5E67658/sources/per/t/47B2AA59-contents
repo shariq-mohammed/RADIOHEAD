@@ -80,8 +80,8 @@ Below we demonstrate an example to compute pathway scores from a randomly genera
 
 Install the `GSVA` package and dependencies. Load `GSEABase` and `GSVA` package.
 ```{r message=FALSE, warning=FALSE}
-if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
-if (!requireNamespace("GSVA", quietly = TRUE)) BiocManager::install("GSVA")
+if(!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+if(!requireNamespace("GSVA", quietly = TRUE)) BiocManager::install("GSVA")
 library(GSEABase)
 library(GSVA)
 ```
